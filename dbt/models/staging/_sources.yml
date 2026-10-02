@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    description: Landing tables written by scripts/load_raw.py, one partition per day.
+    tables:
+      - name: assets
+        description: Asset master. ReplacingMergeTree; read with FINAL.
+      - name: prices
+        description: Daily close per asset. IDX equities have no weekend rows.
+        loaded_at_field: loaded_at
+      - name: trades
+        description: >
+          Executions as delivered by upstream. At-least-once: a trade_id can
+          appear more than once, and asset_id/side casing is inconsistent.
+        loaded_at_field: loaded_at
+        freshness:
+          warn_after: {count: 2, period: day}

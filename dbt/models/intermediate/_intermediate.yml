@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: int_position_daily
+    description: Daily position and cumulative cash flow per account and asset, gap-filled.
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [account_id, asset_id, as_of_date]
+    columns:
+      - name: position_quantity
+        description: Spot only; a negative value means a sell exceeded holdings.
+        data_tests: [non_negative]
+
+  - name: int_position_valued
+    description: Daily position marked with the as-of close.
+    columns:
+      - name: mark_price
+        data_tests: [not_null, non_negative]
+      - name: mark_price_age_days
+        description: Days since the close used for marking; 0 on trading days, up to 2 over an IDX weekend.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1, 2]
+                quote: false
+              config:
+                severity: warn

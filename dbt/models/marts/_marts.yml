@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: dim_assets
+    description: Asset dimension with trading activity span.
+    config:
+      engine: MergeTree()
+      order_by: asset_id
+    columns:
+      - name: asset_id
+        data_tests: [unique, not_null]
+
+  - name: fact_trades
+    description: >
+      One row per executed trade (deduplicated), enriched with asset attributes.
+      Incremental delete+insert on trade_id.
+    columns:
+      - name: trade_id
+        data_tests: [unique, not_null]
+      - name: asset_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_assets')
+                field: asset_id
+      - name: side
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [buy, sell]
+
+  - name: fct_daily_pnl
+    description: Daily mark-to-market PnL per account and asset in the asset's quote currency.
+    config:
+      engine: MergeTree()
+      order_by: (account_id, asset_id, as_of_date)
+      partition_by: toYYYYMM(as_of_date)
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [account_id, asset_id, as_of_date]
+    columns:
+      - name: market_value
+        data_tests: [non_negative]
+      - name: total_pnl
+        description: Market value plus cumulative cash flow (realised + unrealised, net of fees).
+      - name: daily_pnl
+        description: Change in total_pnl versus the previous calendar day; the first day equals total_pnl.
+
+  - name: fct_account_daily_pnl
+    description: Daily PnL per account and quote currency.
+    config:
+      engine: MergeTree()
+      order_by: (account_id, quote_ccy, as_of_date)
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [account_id, quote_ccy, as_of_date]

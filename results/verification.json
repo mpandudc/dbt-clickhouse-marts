@@ -1,0 +1,33 @@
+{
+  "started_at": "2026-10-02T21:30:57+0700",
+  "versions": {
+    "clickhouse": "26.8.15.10",
+    "dbt": [
+      "Core:",
+      "- installed: 1.12.5",
+      "- latest:    1.12.5 - Up to date!",
+      "Plugins:",
+      "- clickhouse: 1.10.3 - Up to date!"
+    ]
+  },
+  "full_build_seconds": 15.6,
+  "after_full_build": {
+    "raw_trade_rows": 1451,
+    "raw_distinct_trades": 1417,
+    "fact_trades": 1417,
+    "fact_distinct_trades": 1417,
+    "daily_pnl_rows": 1190,
+    "max_as_of_date": "2026-02-09",
+    "latest_total_pnl_by_ccy": "[('IDR','28609629.15'),('USDT','4874.53932239')]"
+  },
+  "after_append": {
+    "raw_trade_rows": 1634,
+    "raw_distinct_trades": 1596,
+    "fact_trades": 1596,
+    "fact_distinct_trades": 1596,
+    "daily_pnl_rows": 1340,
+    "max_as_of_date": "2026-02-14",
+    "latest_total_pnl_by_ccy": "[('IDR','15416269.15'),('USDT','11317.38552495')]"
+  },
+  "finished_at": "2026-10-02T21:33:48+0700"
+}
