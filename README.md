@@ -56,6 +56,7 @@ make check                 # offline: generator unit tests + project structure
 make image up              # build dbt runner, start ClickHouse on :18123
 make load DAYS=45          # generate and load 45 days from 2026-01-01
 make build                 # dbt build: models + 30 data tests + unit test
+make docs-serve            # web UI: dbt docs (lineage + catalog) on :18090
 make verify                # full runtime proof, writes results/verification.json
 make clean
 ```

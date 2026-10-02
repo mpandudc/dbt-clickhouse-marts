@@ -1,4 +1,4 @@
-.PHONY: config up down clean image load build docs check verify
+.PHONY: config up down clean image load build docs docs-serve check verify
 
 START ?= 2026-01-01
 DAYS ?= 45
@@ -27,6 +27,10 @@ build: up
 
 docs: up
 	$(RUN) dbt docs generate
+
+# Web UI on http://localhost:18090 (lineage + catalog); run after `make build`.
+docs-serve: up
+	docker compose --profile docs up -d docs
 
 check:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v

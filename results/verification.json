@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-10-02T21:30:57+0700",
+  "started_at": "2026-10-02T22:12:32+0700",
   "versions": {
     "clickhouse": "26.8.15.10",
     "dbt": [
@@ -10,7 +10,7 @@
       "- clickhouse: 1.10.3 - Up to date!"
     ]
   },
-  "full_build_seconds": 15.6,
+  "full_build_seconds": 8.5,
   "after_full_build": {
     "raw_trade_rows": 1451,
     "raw_distinct_trades": 1417,
@@ -29,5 +29,5 @@
     "max_as_of_date": "2026-02-14",
     "latest_total_pnl_by_ccy": "[('IDR','15416269.15'),('USDT','11317.38552495')]"
   },
-  "finished_at": "2026-10-02T21:33:48+0700"
+  "finished_at": "2026-10-02T22:13:58+0700"
 }

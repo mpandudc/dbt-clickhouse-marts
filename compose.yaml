@@ -48,5 +48,29 @@ services:
     mem_limit: 768m
     <<: *common-security
 
+  # Web UI: dbt docs site (lineage graph, model and column docs, test coverage).
+  docs:
+    image: local/dbt-clickhouse-marts:1.0
+    profiles: [docs]
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    environment:
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_HTTP_PORT: "8123"
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-dbt}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-dbt}
+      DBT_PROFILES_DIR: /app/dbt/profiles
+    working_dir: /app/dbt
+    volumes:
+      - ./:/app
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - dbt docs generate --target-path /tmp/docs && dbt docs serve --target-path /tmp/docs --host 0.0.0.0 --port 8080 --no-browser
+    ports:
+      - "${DOCS_PORT:-18090}:8080"
+    mem_limit: 512m
+    <<: *common-security
+
 volumes:
   clickhouse-data:

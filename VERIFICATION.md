@@ -16,6 +16,9 @@ Verified on 2026-10-02 (Asia/Jakarta) with `make check` and `make verify`.
 - Backfill of 2026-01-10 via `--vars start_date/end_date`: PASS=7, all counts
   and PnL identical to before.
 
+- dbt docs web UI (`docs` service) served the site and a catalog containing
+  `fct_daily_pnl` on :18090. (Re-run 2026-10-02 22:13 with identical results.)
+
 Raw numbers: [results/verification.json](results/verification.json).
 
 The PnL values come from seeded synthetic data and carry no market meaning;

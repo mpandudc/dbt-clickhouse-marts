@@ -11,6 +11,7 @@ import json
 import subprocess
 import sys
 import time
+import urllib.request
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -105,6 +106,19 @@ def main() -> None:
     load(START + timedelta(days=9), 1)
     dbt("build", "--select", "fact_trades+", "--vars", "{start_date: '2026-01-10', end_date: '2026-01-10'}")
     expect(snapshot() == grown, "explicit backfill window rebuilds a past day without duplicates")
+
+    sh("docker", "compose", "--profile", "docs", "up", "-d", "docs")
+    docs_ok = False
+    for _ in range(60):
+        try:
+            with urllib.request.urlopen("http://localhost:18090/", timeout=5) as response:
+                docs_ok = response.status == 200 and b"dbt" in response.read()
+            with urllib.request.urlopen("http://localhost:18090/catalog.json", timeout=5) as response:
+                docs_ok = docs_ok and b"fct_daily_pnl" in response.read()
+            break
+        except OSError:
+            time.sleep(2)
+    expect(docs_ok, "dbt docs web UI serves the catalog on :18090")
 
     evidence["finished_at"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     out = ROOT / "results" / "verification.json"
